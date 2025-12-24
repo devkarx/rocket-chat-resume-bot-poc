@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  rocketchat:
+    image: registry.rocket.chat/rocketchat/rocket.chat:6.5.0
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      # Basic Config
+      MONGO_URL: "mongodb://mongodb:27017/rocketchat?replicaSet=rs0&directConnection=true"
+      MONGO_OPLOG_URL: "mongodb://mongodb:27017/local?replicaSet=rs0&directConnection=true"
+      ROOT_URL: "http://localhost:3000"
+      PORT: 3000
+      
+      # 👇 THE BYPASS SQUAD 👇
+      INITIAL_USER: "yes"
+      ADMIN_USERNAME: "superuser"
+      ADMIN_PASS: "password123"
+      ADMIN_NAME: "SuperAdmin"
+      ADMIN_EMAIL: "admin@local.com"
+      
+      # We use BOTH variable names because RC changes this often
+      OVERWRITE_SETTING_Show_Setup_Wizard: "completed"
+      OVERWRITE_SETTING_Setup_Wizard: "completed"
+      
+      # Force accept privacy terms so it doesn't ask
+      OVERWRITE_SETTING_Cloud_Service_Agree_PrivacyTerms: "true"
+      OVERWRITE_SETTING_Apps_Framework_Enabled: "true"
+      OVERWRITE_SETTING_Apps_Framework_Development_Mode: "true"
+      
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mongo-init-replica:
+        condition: service_completed_successfully
+    networks:
+      - rocketchat-network
+
+  mongodb:
+    image: mongo:5.0
+    restart: unless-stopped
+    command: mongod --oplogSize 128 --replSet rs0 --bind_ip_all
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - rocketchat-network
+
+  mongo-init-replica:
+    image: mongo:5.0
+    command: >
+      bash -c "
+      sleep 10 && 
+      mongosh --host mongodb:27017 --eval '
+      try {
+        rs.initiate({
+          _id: \"rs0\",
+          members: [{ _id: 0, host: \"mongodb:27017\" }]
+        });
+      } catch(e) { print(e); }
+      '
+      "
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - rocketchat-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  rocketchat-network:
+    driver: bridge

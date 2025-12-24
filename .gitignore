@@ -1,0 +1,12 @@
+# Dependencies
+node_modules
+dist
+build
+
+# Secrets (NEVER UPLOAD THESE)
+.env
+.DS_Store
+
+# Local DB Data
+data/
+uploads/

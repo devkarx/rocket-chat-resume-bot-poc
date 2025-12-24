@@ -1,0 +1,18 @@
+{
+    "id": "e55af759-cfc6-4cd5-b1af-db4cd5a78d10",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.38.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "devkarx",
+        "homepage": "https://github.com/devkarx",
+        "support": "https://github.com/devkarx"
+    },
+    "name": "AirGappedAI",
+    "nameSlug": "airgappedai-vfour",
+    "classFile": "AirGappedAiApp.ts",
+    "description": "Privacy-first AI agent using Ollama.",
+    "implements": [
+        "IPreFileUpload"
+    ]
+}
