@@ -3,7 +3,7 @@
 A Retrieval-Augmented Generation (RAG) prototype designed to analyze resumes against job descriptions within Rocket.Chat. This project implements a microservices architecture to handle file processing, vector embeddings, and chat interactions.
 
 ## ⚠️ Project Status: Archived
-**Reason:** This project served as a Proof of Concept (POC) to test external AI integrations. It is now archived to focus on a **Native Air-Gapped Search App** for the Rocket.Chat GSoC program, ensuring strict data privacy without external dependencies.
+**Reason:** This project served as a Proof of Concept (POC) to test external AI integrations. It is now archived to focus on a **Native Air-Gapped Search App** for the Rocket.Chat ecosystem, ensuring strict data privacy without external dependencies.
 
 ## 📂 Architecture Overview
 This repository is organized into four distinct services:
@@ -16,7 +16,7 @@ This repository is organized into four distinct services:
 ## 🛠 Tech Stack
 * **Frontend:** Rocket.Chat Apps Engine (TypeScript)
 * **Backend:** Node.js, Express
-* **AI/ML:** Pinecone (Vector DB), LangChain (Logic), OpenAI/Ollama (LLM)
+* **AI/ML:** Pinecone (Vector DB), LangChain (Logic), OpenAI/Ollama (Local LLM support)
 * **DevOps:** Docker, Docker Compose
 
 ## 🚀 How it Worked
